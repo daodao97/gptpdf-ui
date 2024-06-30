@@ -1,0 +1,4 @@
+Flask==3.0.3
+gptpdf==0.0.2
+Markdown==3.6
+MarkupSafe==2.1.5
