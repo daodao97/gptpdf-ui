@@ -22,8 +22,8 @@ python main.py
 
 ## routes
 
-- /upload response pdf conent with sse
+- `/upload` response pdf conent with sse
 
-- /files/<path:filename>  response pdf content with html
+- `/files/<path:filename>`  response pdf content with html
 
-- /md/<path:filename>  response pdf content with md
+- `/md/<path:filename>`  response pdf content with md
