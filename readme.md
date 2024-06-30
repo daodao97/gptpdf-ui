@@ -1,4 +1,6 @@
-# GPTPDF UI
+# gptpdf ui
+
+[gptpdf](https://github.com/CosmosShadow/gptpdf)
 
 ![](preview.png)
 
