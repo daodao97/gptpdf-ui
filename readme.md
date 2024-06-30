@@ -8,15 +8,12 @@
 pip install -r requirements.txt
 ```
 
+## set openai key
+
+file `parse_pdf.py`
+
 ## start serve
 
 ```shell
 python main.py
-```
-
-## OpenAI Env
-
-```
-OPENAI_API_KEY=sk-xxxx
-OPENAI_BASE_URL=https:xxx.com
 ```
