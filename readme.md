@@ -19,3 +19,11 @@ file `parse_pdf.py`
 ```shell
 python main.py
 ```
+
+## routes
+
+- /upload response pdf conent with sse
+
+- /files/<path:filename>  response pdf content with html
+
+- /md/<path:filename>  response pdf content with md

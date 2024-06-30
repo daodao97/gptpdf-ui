@@ -50,8 +50,12 @@ def md_render(filename):
 
 @app.route('/uploads/<path:filename>')
 def file_server(filename):
-    # 发送指定文件到客户端
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+@app.route('/md/<path:filename>')
+def md_format(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md")
+    return send_file(file_path, filename)
 
 def run_gptpdf(filepath):
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
