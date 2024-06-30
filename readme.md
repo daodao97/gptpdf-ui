@@ -12,7 +12,10 @@ pip install -r requirements.txt
 
 ## set openai key
 
-file `parse_pdf.py`
+```shell
+export OPENAI_BASE_URL=https://api.xxxx.com/v1
+export OPENAI_API_KEY=sk-xxxxx
+```
 
 ## start serve
 
@@ -20,7 +23,15 @@ file `parse_pdf.py`
 python main.py
 ```
 
-## routes
+## docker
+
+```
+docker compsoe up --build
+
+docker compose up
+```
+
+## api
 
 - `/upload` response pdf conent with sse
 

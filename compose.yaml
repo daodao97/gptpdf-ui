@@ -1,0 +1,7 @@
+services:
+  web: 
+    build:
+      context: . 
+    stop_signal: SIGINT
+    ports:
+      - '5000:5000'

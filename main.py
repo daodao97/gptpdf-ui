@@ -58,7 +58,7 @@ def md_format(filename):
     return send_file(file_path, filename)
 
 def run_gptpdf(filepath):
-    process = subprocess.Popen(['python', 'parse_pdf.py', filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in iter(process.stdout.readline, b''):
         line_str = line.decode('utf-8')
         if line_str.startswith('![]('):  # ![](1.png)
@@ -116,4 +116,4 @@ class ImagePrefixInlineProcessor(InlineProcessor):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
