@@ -7,6 +7,7 @@ import markdown
 from markupsafe import Markup
 from markdown.inlinepatterns import InlineProcessor
 from markdown.extensions import Extension
+from archive import archive
 import xml.etree.ElementTree as ElementTree
 
 app = Flask(__name__)
@@ -31,7 +32,7 @@ def upload_file():
         filepath = filepath.replace(' ', '_')
         file.save(filepath)
         return Response(run_gptpdf(filepath), content_type='text/event-stream')
-    
+
 @app.route('/files/<path:filename>')
 def md_render(filename):
     # 读取 Markdown 文件并转换为 HTML
@@ -42,10 +43,10 @@ def md_render(filename):
             html_content = markdown.markdown(content, extensions=[ImagePrefixExtension(prefix= "/"+os.path.join(UPLOAD_FOLDER, filename + ".parse"))])
             return render_template('file.html', content=Markup(html_content), filename=filename)
     else:
-         if filename.lower().endswith('.png'):
+        if filename.lower().endswith('.png'):
             # 直接发送 PNG 文件
             return send_file(os.path.join(UPLOAD_FOLDER, filename + ".parse", filename), mimetype='image/png')
-         else:
+        else:
             return "File not found", 404
 
 @app.route('/uploads/<path:filename>')
@@ -54,8 +55,13 @@ def file_server(filename):
 
 @app.route('/md/<path:filename>')
 def md_format(filename):
-    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md")
-    return send_file(file_path, filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md",)
+    return send_file(file_path, mimetype='text/markdown', as_attachment=True, download_name=filename+'.md')
+
+@app.route('/zip/<path:filename>')
+def zip_format(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "archive.zip",)
+    return send_file(file_path, mimetype='application/x-zip', as_attachment=True, download_name=filename+'.zip')
 
 def run_gptpdf(filepath):
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -72,6 +78,7 @@ def run_gptpdf(filepath):
         yield f'data: {line_str}\n\n'
     process.stdout.close()
     process.wait()
+    archive(filepath.split("/")[-1])
 
 def get_all_pdf_names(directory):
     """

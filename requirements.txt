@@ -1,4 +1,4 @@
 Flask==3.0.3
-gptpdf==0.0.2
+gptpdf==0.0.5
 Markdown==3.6
 MarkupSafe==2.1.5
