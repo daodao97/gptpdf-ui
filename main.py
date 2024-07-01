@@ -7,6 +7,7 @@ import markdown
 from markupsafe import Markup
 from markdown.inlinepatterns import InlineProcessor
 from markdown.extensions import Extension
+from archive import archive
 import xml.etree.ElementTree as ElementTree
 
 app = Flask(__name__)
@@ -57,6 +58,11 @@ def md_format(filename):
     file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md",)
     return send_file(file_path, mimetype='text/markdown', as_attachment=True, download_name=filename+'.md')
 
+@app.route('/zip/<path:filename>')
+def zip_format(filename):
+    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "archive.zip",)
+    return send_file(file_path, mimetype='application/x-zip', as_attachment=True, download_name=filename+'.zip')
+
 def run_gptpdf(filepath):
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in iter(process.stdout.readline, b''):
@@ -72,6 +78,7 @@ def run_gptpdf(filepath):
         yield f'data: {line_str}\n\n'
     process.stdout.close()
     process.wait()
+    archive(filepath.split("/")[-1])
 
 def get_all_pdf_names(directory):
     """

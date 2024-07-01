@@ -23,6 +23,12 @@ export OPENAI_API_KEY=sk-xxxxx
 python main.py
 ```
 
+or
+
+```shell
+flask --app main.py run
+```
+
 ## docker
 
 ```
