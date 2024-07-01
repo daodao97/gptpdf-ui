@@ -31,7 +31,7 @@ def upload_file():
         filepath = filepath.replace(' ', '_')
         file.save(filepath)
         return Response(run_gptpdf(filepath), content_type='text/event-stream')
-    
+
 @app.route('/files/<path:filename>')
 def md_render(filename):
     # 读取 Markdown 文件并转换为 HTML
@@ -42,10 +42,10 @@ def md_render(filename):
             html_content = markdown.markdown(content, extensions=[ImagePrefixExtension(prefix= "/"+os.path.join(UPLOAD_FOLDER, filename + ".parse"))])
             return render_template('file.html', content=Markup(html_content), filename=filename)
     else:
-         if filename.lower().endswith('.png'):
+        if filename.lower().endswith('.png'):
             # 直接发送 PNG 文件
             return send_file(os.path.join(UPLOAD_FOLDER, filename + ".parse", filename), mimetype='image/png')
-         else:
+        else:
             return "File not found", 404
 
 @app.route('/uploads/<path:filename>')
@@ -54,8 +54,8 @@ def file_server(filename):
 
 @app.route('/md/<path:filename>')
 def md_format(filename):
-    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md")
-    return send_file(file_path, filename)
+    file_path = os.path.join(UPLOAD_FOLDER, filename + ".parse", "output.md",)
+    return send_file(file_path, mimetype='text/markdown', as_attachment=True, download_name=filename+'.md')
 
 def run_gptpdf(filepath):
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
