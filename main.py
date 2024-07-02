@@ -9,6 +9,7 @@ from markdown.inlinepatterns import InlineProcessor
 from markdown.extensions import Extension
 from archive import archive
 import xml.etree.ElementTree as ElementTree
+import re
 
 app = Flask(__name__)
 
@@ -64,11 +65,13 @@ def zip_format(filename):
     return send_file(file_path, mimetype='application/x-zip', as_attachment=True, download_name=filename+'.zip')
 
 def run_gptpdf(filepath):
+    print("filepath:", filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL'])
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in iter(process.stdout.readline, b''):
         line_str = line.decode('utf-8')
-        if line_str.startswith('![]('):  # ![](1.png)
-            image_path = line_str.strip()[4:-1]  # Extract the image path from the line
+        match = re.match(r'!\[.*\]\((.*)\)', line_str)  # Match any image path format
+        if match:
+            image_path = match.group(1)
             full_image_path = os.path.join(filepath + ".parse", image_path)
             if os.path.exists(full_image_path):
                 with open(full_image_path, "rb") as image_file:
