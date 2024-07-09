@@ -65,7 +65,6 @@ def zip_format(filename):
     return send_file(file_path, mimetype='application/x-zip', as_attachment=True, download_name=filename+'.zip')
 
 def run_gptpdf(filepath):
-    print("filepath:", filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL'])
     process = subprocess.Popen(['python', 'parse_pdf.py', filepath, os.environ['OPENAI_API_KEY'], os.environ['OPENAI_BASE_URL']], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in iter(process.stdout.readline, b''):
         line_str = line.decode('utf-8')
@@ -118,6 +117,7 @@ class ImagePrefixInlineProcessor(InlineProcessor):
             src = m.group(2)
             src = self.config['prefix'] + "/" + src
             el = ElementTree.Element("img")
+            el.set('style', 'max-width: 100%')
             el.set('src', src)
             el.set('alt', alt)
             return el, m.start(0), m.end(0)
