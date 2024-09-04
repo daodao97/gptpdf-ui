@@ -32,7 +32,7 @@ flask --app main.py run
 ## docker
 
 ```
-docker compsoe up --build
+docker compose up --build
 
 docker compose up
 ```
